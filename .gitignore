@@ -2,3 +2,4 @@ node_modules/
 .vscode/tags
 .vscode-test/
 out/
+yarn-error.log
