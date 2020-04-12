@@ -10,7 +10,7 @@ export class SearchResultQuickPickItem implements vscode.QuickPickItem {
 	constructor(public searchResult: SearchResult) {
 		this.label = searchResult.blockInfo.name;
 		this.description = searchResult.blockInfo.definition;
-		this.detail = searchResult.uri.path;
+		this.detail = `${searchResult.workspaceFolder.name}: ${searchResult.workspaceRelativePath}`;
 	}
 }
 

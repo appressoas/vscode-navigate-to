@@ -13,7 +13,7 @@ export default class SearchIndexFile {
     variables: Array<BlockInfo>;
     parserClass: any;
 
-    constructor(public uri: vscode.Uri) {
+    constructor(public workspaceFolder: vscode.WorkspaceFolder, public uri: vscode.Uri) {
         const extension = path.extname(this.uri.path);
         const parserClass = PARSERS.get(extension);
         if (!parserClass) {
@@ -67,7 +67,7 @@ export default class SearchIndexFile {
         });
         let searchResults = new Array<SearchResult>();
         for (let searchItem of fuse.search(query)) {
-            searchResults.push(new SearchResult(this.uri, searchItem.item));
+            searchResults.push(new SearchResult(this.workspaceFolder, this.uri, searchItem.item));
         }
         return searchResults;
     }

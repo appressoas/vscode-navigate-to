@@ -13,8 +13,8 @@ export default class SearchIndex {
         this.hasIndex = false;
         this.isIndexing = false;
     }
-    async setFile(uri: vscode.Uri) {
-        const indexFile = new SearchIndexFile(uri);
+    async setFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
+        const indexFile = new SearchIndexFile(workspaceFolder, uri);
         await indexFile.parse();
         this.files.set(uri.path, indexFile);
     }
@@ -24,13 +24,22 @@ export default class SearchIndex {
         return `**/*{${extensions}}`;
     }
 
-    async rebuildIndex() {
-        this.files = new Map<string, SearchIndexFile>();
+    async collectFilesForIndex (workspaceFolder: vscode.WorkspaceFolder) {
         const uris = await vscode.workspace.findFiles(this.findFilesIncludeGlob, null);
         for (let uri of uris) {
-            await this.setFile(uri);
+            // TODO: .gitignore etc.
+            await this.setFile(workspaceFolder, uri);
         }
-        this.hasIndex = true;
+    }
+
+    async rebuildIndex() {
+        this.files = new Map<string, SearchIndexFile>();
+        if (vscode.workspace.workspaceFolders) {
+            for (let workspaceFolder of vscode.workspace.workspaceFolders) {
+                await this.collectFilesForIndex(workspaceFolder)
+            }
+            this.hasIndex = true;
+        }
     }
 
     async getIndexedFiles() {
