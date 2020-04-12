@@ -179,9 +179,7 @@ class Stuff {
 }
 `;
 		const parser = new JavaScriptParser(sourceCode);
-		// parser.prettyLogParsingTree();
 		parser.parse();
-		console.log(parser.toPlainObject());
 		assert.equal(parser.variables.size, 1);
 		const stuffBlockInfo = <BlockInfo>parser.variables.get('Stuff.size');
 		assert(stuffBlockInfo);

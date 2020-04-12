@@ -1,3 +1,6 @@
+def my_demo_function():
+    pass
+
 class PyDemoClass:
     MY_STATIC_VAR = 10
 

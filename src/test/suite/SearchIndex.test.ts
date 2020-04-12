@@ -20,17 +20,66 @@ suite('SearchIndex Test Suite', () => {
 		});
 	});
 
-	test('search javascript', () => {
+	test('search javascript class sanity', () => {
 		const searchIndex = new SearchIndex();
 		return searchIndex.search('JsDemoClass', ['classes']).then((searchResults: Array<any>) => {
 			assert.equal(searchResults[0].blockInfo.name, 'JsDemoClass');
 		});
 	});
 
-	test('search python', () => {
+	test('search javascript method sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('JsDemoClass.hell', ['methods']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'JsDemoClass.hello');
+		});
+	});
+
+	test('search javascript function sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('myDemoFunc', ['functions']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'myDemoFunction');
+		});
+	});
+
+	test('search javascript variable sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('JsDemoClass.STATIC', ['variables']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'JsDemoClass.MY_STATIC_VAR');
+		});
+	});
+
+	test('search python class sanity', () => {
 		const searchIndex = new SearchIndex();
 		return searchIndex.search('PyDemoClass', ['classes']).then((searchResults: Array<any>) => {
 			assert.equal(searchResults[0].blockInfo.name, 'PyDemoClass');
+		});
+	});
+
+	test('search python method sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('PyDemoClass.hell', ['methods']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'PyDemoClass.hello');
+		});
+	});
+
+	test('search python function sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('my_demo_func', ['functions']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'my_demo_function');
+		});
+	});
+
+	test('search python variable sanity', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('PyDemoClass.STATIC', ['variables']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults[0].blockInfo.name, 'PyDemoClass.MY_STATIC_VAR');
+		});
+	});
+
+	test('search ignore OK', () => {
+		const searchIndex = new SearchIndex();
+		return searchIndex.search('ignored', ['functions']).then((searchResults: Array<any>) => {
+			assert.equal(searchResults.length, 0);
 		});
 	});
 });

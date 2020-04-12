@@ -1,0 +1,8 @@
+{
+    "navigateTo.ignore": [
+        "**/settingsignoredfile.*"
+    ],
+    "navigateTo.ignoreFileNames": [
+        ".fake-gitignore"
+    ]
+}

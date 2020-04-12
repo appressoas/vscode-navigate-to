@@ -1,4 +1,8 @@
-class JsDemoClass {
+export function myDemoFunction () {
+  
+}
+
+export default class JsDemoClass {
   static MY_STATIC_VAR = 10;
 
   constructor(a, b) {
