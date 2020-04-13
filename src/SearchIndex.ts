@@ -6,6 +6,7 @@ import ignore, {Ignore} from 'ignore'
 import { DISTINCT_PARSER_EXTENSIONS } from './parsers/parsers';
 import SearchIndexFile from "./SearchIndexFile";
 import WorkspaceFolderSettings from './WorkspaceFolderSettings';
+import { performance } from 'perf_hooks';
 
 
 class WorkspaceIgnore {
@@ -98,6 +99,19 @@ export default class SearchIndex {
         this.files.set(uri.path, indexFile);
     }
 
+    private async setFiles(workspaceFolder: vscode.WorkspaceFolder, uris: ReadonlyArray<vscode.Uri>, progress: vscode.Progress<{increment: number, message: string}>|null) {
+        let uriIndex = 0;
+        for (let uri of uris) {
+            const increment = 100 / uris.length;
+            progress?.report({
+                increment: increment,
+                message: `Parsing file ${uriIndex + 1}/${uris.length}`
+            });
+            await this.setFile(workspaceFolder, uri);
+            uriIndex ++;
+        }
+    }
+
     async addOrUpdateFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
         await this.setFile(workspaceFolder, uri);
     }
@@ -121,12 +135,37 @@ export default class SearchIndex {
         }
     }
 
-    private async collectFilesForIndex (workspaceFolder: vscode.WorkspaceFolder) {
-        const workspaceIgnore = new WorkspaceIgnore(workspaceFolder);
-        const uris = await workspaceIgnore.findFiles();
-        for (let uri of uris) {
-            await this.setFile(workspaceFolder, uri);
-        }
+    private async buildIndexForWorkspaceFolder (workspaceFolder: vscode.WorkspaceFolder) {
+        return vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: `Rebuilding navigate-to search index for ${workspaceFolder.name}.`,
+            cancellable: false
+        }, (progress: vscode.Progress<{increment: number, message: string}>, token: vscode.CancellationToken) => {
+            return new Promise ((resolve, reject) => {
+                console.log(`navigate-to: Rebuild index for ${workspaceFolder.name} starting.`);
+                const startTime = performance.now();
+                const workspaceIgnore = new WorkspaceIgnore(workspaceFolder);
+                workspaceIgnore.findFiles()
+                .then((uris) => {
+                    this.setFiles(workspaceFolder, uris, progress)
+                    .then(() => {
+                        const endTime = performance.now();
+                        const totalSeconds = (endTime - startTime) / 1000;
+                        console.log(
+                            `navigate-to: Rebuild index for ${workspaceFolder.name} done. ` + 
+                            `Indexed ${this.files.size} files. ` + 
+                            `Total seconds used: ${totalSeconds}.`);
+                        resolve();
+                    })
+                    .catch((error: any) => {
+                        reject(error);
+                    });
+                })
+                .catch((error: any) => {
+                    reject(error);
+                });
+            });
+        });
     }
 
     async rebuildIndex() {
@@ -138,10 +177,10 @@ export default class SearchIndex {
             this.isIndexing = true;
             this.files = new Map<string, SearchIndexFile>();
             for (let workspaceFolder of vscode.workspace.workspaceFolders) {
-                await this.collectFilesForIndex(workspaceFolder)
+                await this.buildIndexForWorkspaceFolder(workspaceFolder);
             }
             this.hasIndex = true;
-            this.isIndexing = false;
+            this.isIndexing = false;    
         } else {
             console.warn('navigate-to: No workspace folders, so nothing to index.');
         }

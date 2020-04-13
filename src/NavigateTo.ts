@@ -81,7 +81,7 @@ export default class NavigateTo {
         try {
             return await new Promise<SearchResult | null>((resolve, reject) => {
                 const input = vscode.window.createQuickPick<SearchResultQuickPickItem>();
-                input.placeholder = 'Type to search';
+                input.placeholder = `Search for ${types?.join(', ')}`;
                 disposables.push(input.onDidChangeValue((value: string) => {
                     if (!value) {
                         input.items = [];
@@ -89,6 +89,7 @@ export default class NavigateTo {
                     }
                     const items = new Array<SearchResultQuickPickItem>();
                     this.index.search(value, <Array<string>>types).then((searchResults: Array<SearchResult>) => {
+                        console.log('SEARCH DONE');
                         for (let searchResult of searchResults) {
                             items.push(new SearchResultQuickPickItem(searchResult));
                         }
