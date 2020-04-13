@@ -2,8 +2,9 @@ import * as Fuse from 'fuse.js';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as minimatch from 'minimatch';
 import ignore, {Ignore} from 'ignore'
-import { DISTINCT_PARSER_EXTENSIONS } from './parsers/parsers';
+import { DISTINCT_PARSER_EXTENSIONS, PARSERS } from './parsers/parsers';
 import SearchIndexFile from "./SearchIndexFile";
 import WorkspaceFolderSettings from './WorkspaceFolderSettings';
 import { performance } from 'perf_hooks';
@@ -43,12 +44,19 @@ class WorkspaceIgnore {
         }
     }
 
-    shouldIgnoreUri (uri: vscode.Uri) {
-        const relativePath = path.relative(
+    getRelativePath (uri: vscode.Uri) {
+        return path.relative(
             path.normalize(this.workspaceFolder.uri.path),
             path.normalize(uri.path)
         );
+    }
+
+    shouldIgnoreRelativePath (relativePath: string) {
         return this.ignore.ignores(relativePath);
+    }
+
+    shouldIgnoreUri (uri: vscode.Uri) {
+        return this.shouldIgnoreRelativePath(this.getRelativePath(uri));
     }
 
     get includeGlobPattern () {
@@ -67,15 +75,28 @@ class WorkspaceIgnore {
         return null;
     }
 
+    shouldIncludeFile (uri: vscode.Uri) {
+        const extension = path.extname(uri.path);
+        if (!PARSERS.has(extension)) {
+            return false;
+        }
+        const relativePath = this.getRelativePath(uri);
+        const excludePattern = this.settings.exclude;
+        if (excludePattern && minimatch(relativePath, excludePattern)) {
+            return false;
+        }
+        return !this.shouldIgnoreRelativePath(relativePath);
+    }
+
     async findFiles () {
         const includedUris = await vscode.workspace.findFiles(this.includePattern, this.excludePattern);
         const filteredUris: Array<vscode.Uri> = [];
         for (let uri of includedUris) {
             if (!this.shouldIgnoreUri(uri)) {
-                // console.debug('Added:', uri.path)
+                console.debug('Added:', uri.path)
                 filteredUris.push(uri);
-            // } else {
-            //     console.debug('Ignored:', uri.path);
+            } else {
+                console.debug('Ignored:', uri.path);
             }
         }
         return filteredUris;
@@ -113,7 +134,11 @@ export default class SearchIndex {
     }
 
     async addOrUpdateFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
-        await this.setFile(workspaceFolder, uri);
+        const workspaceIgnore = new WorkspaceIgnore(workspaceFolder);
+        if (workspaceIgnore.shouldIncludeFile(uri)) {
+            console.log(`navigate-to: Rebuilding index for ${uri.path}.`);
+            await this.setFile(workspaceFolder, uri);
+        }
     }
 
     async addOrUpdateFiles(uris: ReadonlyArray<vscode.Uri>) {

@@ -19,7 +19,7 @@ This extension contributes the following settings:
 
 * `navigateTo.ignore`: An array of .gitignore compatible ignore patterns. Just like you would add to .gitignore, but one pattern per entry in the array (instead of one per line as in .gitignore). All patterns are relative to the root of the workspace directory (the directory with .vscode/ as a subdirectory).
 * `navigateTo.ignoreFileNames`: An array of filenames to look in for gitignore patterns. Defaults to `[".gitignore"]`, and that is probably what you want in most cases. ONLY files in the root of the workspace directory (the directory with .vscode/ as a subdirectory) is checked. So adding a file that you have in a subdirectory will not help here.
-* `navigateTo.exclude`: Simple glob exclude pattern. Defaults to `*/{node_modules,.git}/*`.
+* `navigateTo.exclude`: Simple glob exclude pattern. Defaults to `*/{node_modules,.git}/**`.
 * `navigateTo.updateIndexOnSave`: Update the search index when a file is saved? Defaults to `true`. Note that the update is cheap - it only re-parses the file you are saving (and tree-sitter is fast and efficient).
 
 
