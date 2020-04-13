@@ -7,7 +7,11 @@ export const someVariableFunction = (a, b) => {
 }
 
 export class SomeHelperClass {
-  hello(self) {
-    console.log(`Hello ${this.message}`);
+  hello() {
+    console.log(`Hello ${this.world()}`);
+  }
+
+  world() {
+    return 'World'
   }
 }

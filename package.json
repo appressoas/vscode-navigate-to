@@ -61,7 +61,13 @@
                     "type": "string",
                     "default": "**/{node_modules,.git}/*",
                     "description": "Array of ignore patterns - format is the same as for .gitignore - one line per array item."
-                }
+                },
+				"navigateTo.updateIndexOnSave": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Turns update index for file on save on/off."
+				}                
             }
         }
     },

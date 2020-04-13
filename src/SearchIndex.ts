@@ -91,13 +91,37 @@ export default class SearchIndex {
         this.hasIndex = false;
         this.isIndexing = false;
     }
-    async setFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
+
+    private async setFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
         const indexFile = new SearchIndexFile(workspaceFolder, uri);
         await indexFile.parse();
         this.files.set(uri.path, indexFile);
     }
 
-    async collectFilesForIndex (workspaceFolder: vscode.WorkspaceFolder) {
+    async addOrUpdateFile(workspaceFolder: vscode.WorkspaceFolder, uri: vscode.Uri) {
+        await this.setFile(workspaceFolder, uri);
+    }
+
+    async addOrUpdateFiles(uris: ReadonlyArray<vscode.Uri>) {
+        for (let uri of uris) {
+            const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+            if (workspaceFolder) {
+                await this.addOrUpdateFile(workspaceFolder, uri);
+            }
+        }
+    }
+
+    removeFile (uri: vscode.Uri) {
+        this.files.delete(uri.path);
+    }
+
+    removeFiles (uris: ReadonlyArray<vscode.Uri>) {
+        for (let uri of uris) {
+            this.removeFile(uri);
+        }
+    }
+
+    private async collectFilesForIndex (workspaceFolder: vscode.WorkspaceFolder) {
         const workspaceIgnore = new WorkspaceIgnore(workspaceFolder);
         const uris = await workspaceIgnore.findFiles();
         for (let uri of uris) {
@@ -106,12 +130,20 @@ export default class SearchIndex {
     }
 
     async rebuildIndex() {
-        this.files = new Map<string, SearchIndexFile>();
         if (vscode.workspace.workspaceFolders) {
+            if (this.isIndexing) {
+                console.warn('navigate-to: Already rebuilding the search index. Refusing to start another rebuild-index while one is already running.');
+                return;
+            }
+            this.isIndexing = true;
+            this.files = new Map<string, SearchIndexFile>();
             for (let workspaceFolder of vscode.workspace.workspaceFolders) {
                 await this.collectFilesForIndex(workspaceFolder)
             }
             this.hasIndex = true;
+            this.isIndexing = false;
+        } else {
+            console.warn('navigate-to: No workspace folders, so nothing to index.');
         }
     }
 

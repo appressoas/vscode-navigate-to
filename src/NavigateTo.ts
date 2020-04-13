@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import SearchIndex from './SearchIndex';
 import SearchResult from './SearchResult';
+import WorkspaceFolderSettings from './WorkspaceFolderSettings';
 
 export class SearchResultQuickPickItem implements vscode.QuickPickItem {
 	label: string;
@@ -16,9 +17,48 @@ export class SearchResultQuickPickItem implements vscode.QuickPickItem {
 
 export default class NavigateTo {
     index: SearchIndex;
+    saveListener: vscode.Disposable;
+    deleteListener: vscode.Disposable;
+    renameListener: vscode.Disposable;
 
     constructor () {
+        this.onDidSaveTextDocument = this.onDidSaveTextDocument.bind(this);
+        this.onDidDeleteFiles = this.onDidDeleteFiles.bind(this);
+        this.onDidRenameFiles = this.onDidRenameFiles.bind(this);
         this.index = new SearchIndex();
+        this.saveListener = vscode.workspace.onDidSaveTextDocument(this.onDidSaveTextDocument);
+        this.deleteListener = vscode.workspace.onDidDeleteFiles(this.onDidDeleteFiles);
+        this.renameListener = vscode.workspace.onDidRenameFiles(this.onDidRenameFiles);
+    }
+
+    onDidDeleteFiles(event : vscode.FileDeleteEvent) {
+        this.index.removeFiles(event.files);
+        // console.log('REMOVED', event.files);
+    }
+
+    onDidRenameFiles(event : vscode.FileRenameEvent) {
+        const urisToRemove = [];
+        const urisToAdd = [];
+        for (let newAndOldUri of event.files) {
+            urisToRemove.push(newAndOldUri.oldUri);
+            urisToAdd.push(newAndOldUri.newUri);
+        }
+        // console.log('RENAMED', urisToRemove, '->', urisToAdd);
+        this.index.removeFiles(urisToRemove);
+        this.index.addOrUpdateFiles(urisToAdd);
+    }
+
+    onDidSaveTextDocument(textDocument: vscode.TextDocument) {
+        // console.log('SAVED', textDocument.uri.path);
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(textDocument.uri);
+        if (workspaceFolder) {
+            const settings = new WorkspaceFolderSettings(workspaceFolder);
+            if (settings.updateIndexOnSave) {
+                this.index.addOrUpdateFile(workspaceFolder, textDocument.uri);
+            }
+        } else {
+            console.warn(`Could not find workspace folder for ${textDocument.uri.toString()}`);
+        }
     }
 
     async openAndShow(searchResult: SearchResult) {

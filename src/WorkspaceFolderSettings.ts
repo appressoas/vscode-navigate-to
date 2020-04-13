@@ -33,4 +33,8 @@ export default class WorkspaceFolderSettings {
         }
         return exclude;
     }
+
+    get updateIndexOnSave (): boolean {
+        return <boolean>this.settings.get('updateIndexOnSave');
+    }
 }
