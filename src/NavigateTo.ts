@@ -89,7 +89,6 @@ export default class NavigateTo {
                     }
                     const items = new Array<SearchResultQuickPickItem>();
                     this.index.search(value, <Array<string>>types).then((searchResults: Array<SearchResult>) => {
-                        console.log('SEARCH DONE');
                         for (let searchResult of searchResults) {
                             items.push(new SearchResultQuickPickItem(searchResult));
                         }
