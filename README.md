@@ -4,13 +4,14 @@ VSCode extension that allows you to quickly find classes, methods, functions or 
 
 ## Features
 
+![](images/vscode-navigate-to.gif)
+
 * Easily lookup of classes, methods, functions and variables. You search for one of them at a time, and when you select a match the file is opened on the line of the definition of your match.
 * Supports multiple workspace folders (e.g. workspaces). We only index files within a workspace, but the workspace can have as many folders as you like.
 * Shows a preview of the definition (unless it is too long) as you search.
 * Fast - uses [tree-sitter](https://tree-sitter.github.io/tree-sitter/) via [node-tree-sitter](https://github.com/tree-sitter/node-tree-sitter), and tree sitter is used by Atom to parse code for syntax hilighting etc., so it is fast and well supported.
 * The index is built on your first search (not on load), or if you run the `NavigateTo: Rebuild index` command palette command. So it has no performance impact on startup times or if you use it infrequently.
 
-\!\[in action\]\(images/vscode-navigate-to.gif\)
 
 
 ## Extension Settings
