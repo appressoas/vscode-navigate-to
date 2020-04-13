@@ -57,8 +57,8 @@ We are considering adding a way to add extra language support in separate extens
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 1.0.1
+Text fixes in README.
 
 ### 1.0.0
-
-Initial release of vscode-navigate-to.
+Initial release of NavigateTo.
