@@ -345,4 +345,25 @@ export const stuff = (a, b) => {
 		assert(stuffBlockInfo);
 		assert.equal(stuffBlockInfo.definition, 'export const stuff = (a, b)');
 	});
+
+	test('javascript jsx detected', () => {
+		const sourceCode = `
+import * as React from 'react';
+
+export class Stuff {
+	render () {
+		return <h1>Hello world</h1>
+	}
+}
+`;
+		const parser = new JavaScriptParser(sourceCode);
+		parser.parse();
+		assert.equal(parser.classes.size, 1);
+		const stuffBlockInfo = <BlockInfo>parser.classes.get('Stuff');
+		assert(stuffBlockInfo);
+		assert.equal(stuffBlockInfo.definition, 'export class Stuff');
+		const renderBlockInfo = <BlockInfo>parser.methods.get('Stuff.render');
+		assert(renderBlockInfo);
+		assert.equal(renderBlockInfo.definition, 'render()');
+	});
 });

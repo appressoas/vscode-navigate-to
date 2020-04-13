@@ -99,12 +99,6 @@ export default class SearchIndex {
 
     async collectFilesForIndex (workspaceFolder: vscode.WorkspaceFolder) {
         const workspaceIgnore = new WorkspaceIgnore(workspaceFolder);
-        // const globPattern = new vscode.RelativePattern(workspaceFolder, this.findFilesIncludeGlob);
-        // const uris = await vscode.workspace.findFiles(globPattern, null);
-        // for (let uri of uris) {
-        //     // TODO: .gitignore etc.
-        // await this.setFile(workspaceFolder, uri);
-        // }
         const uris = await workspaceIgnore.findFiles();
         for (let uri of uris) {
             await this.setFile(workspaceFolder, uri);
