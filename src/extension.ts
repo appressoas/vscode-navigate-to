@@ -23,6 +23,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToVariable', () => {
 		navigator.navigateToVariable();
 	}));
+	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToAny', () => {
+		navigator.navigateToAny();
+	}));
 }
 
 // this method is called when your extension is deactivated

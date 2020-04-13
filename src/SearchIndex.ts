@@ -16,8 +16,8 @@ class WorkspaceIgnore {
     constructor (public workspaceFolder: vscode.WorkspaceFolder) {
         this.ignore = ignore();
         this.settings = new WorkspaceFolderSettings(workspaceFolder);
-        this.addIgnorePatternsFromSettings();
         this.addIgnorePatternsFromGitIgnoreFile();
+        this.addIgnorePatternsFromSettings();
     }
 
     getIgnoreFilePaths (): Array<string> {

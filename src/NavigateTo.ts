@@ -137,4 +137,7 @@ export default class NavigateTo {
     navigateToVariable () {
         this.pickAndOpenSearchResult(['variables']);
     }
+    navigateToAny () {
+        this.pickAndOpenSearchResult();
+    }
 }

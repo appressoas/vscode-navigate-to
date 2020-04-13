@@ -1,8 +1,8 @@
 {
     "name": "nagivateto",
     "displayName": "Grouped Symbol Search",
-    "description": "Allows you to quickly find classes, methods, functions or variables.",
-    "version": "0.0.1",
+    "description": "Allows you to quickly find classes, methods, functions or variables in VSCode.",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.43.0"
     },
@@ -38,6 +38,10 @@
             {
                 "command": "nagivateto.navigateToVariable",
                 "title": "NavigateTo: Variable"
+            },
+            {
+                "command": "nagivateto.navigateToAny",
+                "title": "NavigateTo: Any"
             }
         ],
         "configuration": {
