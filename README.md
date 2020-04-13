@@ -1,35 +1,55 @@
 # nagivateto README
 
-This is the README for your extension "nagivateto". After writing up a brief description, we recommend including the following sections.
+VSCode extension that allows you to quickly find classes, methods, functions or variables in Python or JavaScript (including react jsx).
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+* Easily lookup of classes, methods, functions and variables. You search for one of them at a time, and when you select a match the file is opened on the line of the definition of your match.
+* Supports multiple workspace folders (e.g. workspaces). We only index files within a workspace, but the workspace can have as many folders as you like.
+* Shows a preview of the definition (unless it is too long) as you search.
+* Fast - uses [tree-sitter](https://tree-sitter.github.io/tree-sitter/) via [node-tree-sitter](https://github.com/tree-sitter/node-tree-sitter), and tree sitter is used by Atom to parse code for syntax hilighting etc., so it is fast and well supported.
+* The index is built on your first search (not on load), or if you run the `NavigateTo: Rebuild index` command palette command. So it has no performance impact on startup times or if you use it infrequently.
 
-For example if there is an image subfolder under your extension project workspace:
+\!\[in action\]\(images/vscode-navigate-to.gif\)
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `navigateTo.ignore`: An array of .gitignore compatible ignore patterns. Just like you would add to .gitignore, but one pattern per entry in the array (instead of one per line as in .gitignore). All patterns are relative to the root of the workspace directory (the directory with .vscode/ as a subdirectory).
+* `navigateTo.ignoreFileNames`: An array of filenames to look in for gitignore patterns. Defaults to `[".gitignore"]`, and that is probably what you want in most cases. ONLY files in the root of the workspace directory (the directory with .vscode/ as a subdirectory) is checked. So adding a file that you have in a subdirectory will not help here.
+* `navigateTo.exclude`: Simple glob exclude pattern. Defaults to `*/{node_modules,.git}/*`.
+* `navigateTo.updateIndexOnSave`: Update the search index when a file is saved? Defaults to `true`. Note that the update is cheap - it only re-parses the file you are saving (and tree-sitter is fast and efficient).
 
-## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### Order of applying ignore/exclude settings
+(How we find files to include in the search index)
+
+1. We search the workspace folders for folder in the workspace, and only include files that match a supported extension. This is `*.py`, `*.js` and `*.jsx`.
+2. Files are excluded by `navigateTo.exclude`.
+3. We build an ignore configuration by reading ignore patterns from all the files in `navigateTo.ignoreFileNames` (e.g. from .gitignore by default), and then we add ignore patterns from the `navigateTo.ignore` setting.
+
+
+## Available command palette commands
+
+The actual command is within `[]` below - useful if you want to setup keybindings.
+
+- **NavigateTo: Class** `[nagivateto.navigateToClass]`. Find and navigate to a class.
+- **NavigateTo: Method** `[nagivateto.navigateToMethod]`. Find and navigate to a method (a function WITHIN a class).
+- **NavigateTo: Function** `[nagivateto.navigateToFunction]`. Find and navigate to a function (a function NOT within a class).
+- **NavigateTo: Variable** `[nagivateto.navigateToVariable]`. Find and navigate to a variable.
+- **NavigateTo: Any** `[nagivateto.navigateToAny]`. Find and navigate to a class, method, function or variable.
+- **NavigateTo: Rebuild index** `[nagivateto.rebuildIndex]`. Rebuild the index. Rarely needed since we build the index when you first search for something, and update it when you save, rename or delete a file.
+
+
+## Adding support for more languages
+See the parsers for javascript and python in `src/parsers/`. As long as there is a tree-sitter language definition available, and the language is not too disimilar from python or javascript, adding support for more languages should be easy. We may have to extend/change the base class for parsers to make it possible to include some languages. You will probably want to read DEVELOP.md if you plan on adding support for more languages.
+
+Get in contact via submitting an issue or pull request on the github repository (https://github.com/appressoas/vscode-navigate-to) if you want to add support for more languages. We will not accept pull requests without tests.
+
+We are considering adding a way to add extra language support in separate extensions. Add an issue, with a suggested solution or at least a willingness to be a beta tester of this functionality, if you want this.
+
 
 ## Release Notes
 
@@ -37,29 +57,4 @@ Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of vscode-navigate-to.

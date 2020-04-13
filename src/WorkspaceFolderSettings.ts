@@ -21,7 +21,7 @@ export default class WorkspaceFolderSettings {
         const ignoreFileNames: Array<string> | undefined = this.settings.get('ignoreFileNames');
         // console.log('ignoreFileNames', ignoreFileNames);
         if (ignoreFileNames === undefined) {
-            return ['.gitignore']
+            return []
         }
         return ignoreFileNames;
     }
