@@ -1,7 +1,12 @@
 {
-    "name": "nagivateto",
-    "displayName": "Grouped Symbol Search",
+    "name": "navigateto",
+    "displayName": "NavigateTo - efficient code navigation",
     "description": "Allows you to quickly find classes, methods, functions or variables in VSCode.",
+    "publisher": "appresso",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/appressoas/vscode-navigate-to"        
+    },
     "version": "1.0.0",
     "engines": {
         "vscode": "^1.43.0"
@@ -10,37 +15,37 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:nagivateto.rebuildIndex",
-        "onCommand:nagivateto.navigateToClass",
-        "onCommand:nagivateto.navigateToMethod",
-        "onCommand:nagivateto.navigateToFunction",
-        "onCommand:nagivateto.navigateToVariable"
+        "onCommand:navigateto.rebuildIndex",
+        "onCommand:navigateto.navigateToClass",
+        "onCommand:navigateto.navigateToMethod",
+        "onCommand:navigateto.navigateToFunction",
+        "onCommand:navigateto.navigateToVariable"
     ],
     "main": "./out/extension.js",
     "contributes": {
         "commands": [
             {
-                "command": "nagivateto.rebuildIndex",
+                "command": "navigateto.rebuildIndex",
                 "title": "NavigateTo: Rebuild index"
             },
             {
-                "command": "nagivateto.navigateToClass",
+                "command": "navigateto.navigateToClass",
                 "title": "NavigateTo: Class"
             },
             {
-                "command": "nagivateto.navigateToMethod",
+                "command": "navigateto.navigateToMethod",
                 "title": "NavigateTo: Method"
             },
             {
-                "command": "nagivateto.navigateToFunction",
+                "command": "navigateto.navigateToFunction",
                 "title": "NavigateTo: Function"
             },
             {
-                "command": "nagivateto.navigateToVariable",
+                "command": "navigateto.navigateToVariable",
                 "title": "NavigateTo: Variable"
             },
             {
-                "command": "nagivateto.navigateToAny",
+                "command": "navigateto.navigateToAny",
                 "title": "NavigateTo: Any"
             }
         ],

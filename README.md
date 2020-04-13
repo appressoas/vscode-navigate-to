@@ -1,4 +1,4 @@
-# nagivateto README
+# navigateto README
 
 VSCode extension that allows you to quickly find classes, methods, functions or variables in Python or JavaScript (including react jsx).
 
@@ -35,12 +35,12 @@ This extension contributes the following settings:
 
 The actual command is within `[]` below - useful if you want to setup keybindings.
 
-- **NavigateTo: Class** `[nagivateto.navigateToClass]`. Find and navigate to a class.
-- **NavigateTo: Method** `[nagivateto.navigateToMethod]`. Find and navigate to a method (a function WITHIN a class).
-- **NavigateTo: Function** `[nagivateto.navigateToFunction]`. Find and navigate to a function (a function NOT within a class).
-- **NavigateTo: Variable** `[nagivateto.navigateToVariable]`. Find and navigate to a variable.
-- **NavigateTo: Any** `[nagivateto.navigateToAny]`. Find and navigate to a class, method, function or variable.
-- **NavigateTo: Rebuild index** `[nagivateto.rebuildIndex]`. Rebuild the index. Rarely needed since we build the index when you first search for something, and update it when you save, rename or delete a file.
+- **NavigateTo: Class** `[navigateto.navigateToClass]`. Find and navigate to a class.
+- **NavigateTo: Method** `[navigateto.navigateToMethod]`. Find and navigate to a method (a function WITHIN a class).
+- **NavigateTo: Function** `[navigateto.navigateToFunction]`. Find and navigate to a function (a function NOT within a class).
+- **NavigateTo: Variable** `[navigateto.navigateToVariable]`. Find and navigate to a variable.
+- **NavigateTo: Any** `[navigateto.navigateToAny]`. Find and navigate to a class, method, function or variable.
+- **NavigateTo: Rebuild index** `[navigateto.rebuildIndex]`. Rebuild the index. Rarely needed since we build the index when you first search for something, and update it when you save, rename or delete a file.
 
 
 ## Adding support for more languages

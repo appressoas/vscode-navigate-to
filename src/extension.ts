@@ -5,25 +5,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('"nagivateTo" extension is active');
+	console.log('"navigateto" extension is active');
 
 	let navigator = new NavigateTo();
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.rebuildIndex', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.rebuildIndex', () => {
 		navigator.rebuildIndex();
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToClass', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.navigateToClass', () => {
 		navigator.navigateToClass();
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToMethod', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.navigateToMethod', () => {
 		navigator.navigateToMethod();
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToFunction', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.navigateToFunction', () => {
 		navigator.navigateToFunction();
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToVariable', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.navigateToVariable', () => {
 		navigator.navigateToVariable();
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('nagivateto.navigateToAny', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('navigateto.navigateToAny', () => {
 		navigator.navigateToAny();
 	}));
 }
