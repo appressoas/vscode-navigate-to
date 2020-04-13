@@ -2,6 +2,9 @@
 
 VSCode extension that allows you to quickly find classes, methods, functions or variables in Python or JavaScript (including react jsx).
 
+This is available through symbol search in vscode, but (depending a bit on the language server/support) it is not as fine grained. I missed this from another IDE, and perhaps someone else will find it useful too.
+
+
 ## Features
 
 ![](images/vscode-navigate-to.gif)
